@@ -13,8 +13,12 @@ class CountrySelector extends React.Component {
   render() {
     return (
       <FormControl>
-        <NativeSelect className="countrySelect">
-          <option value="global">World</option>
+        <NativeSelect
+          className="countrySelect"
+          defaultValue=""
+          onChange={(e) => this.props.handleCountryChange(e.target.value)}
+        >
+          <option value="">World</option>
           {this.state.countries.map((country, i) => (
             <option key={i} value={country}>
               {country}

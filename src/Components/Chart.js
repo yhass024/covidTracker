@@ -1,13 +1,16 @@
 import { fetchChartData } from "../Apis/IndexApi";
+import { fetchCountries } from "../Apis/IndexApi";
 import { Line, Bar } from "react-chartjs-2";
 import React from "react";
 
 class Chart extends React.Component {
   state = { dailyData: [] };
+
   async componentDidMount() {
     const fetchedData = await fetchChartData();
     this.setState({ dailyData: fetchedData });
   }
+
   render() {
     const lineChart = this.state.dailyData ? (
       <Line
@@ -31,7 +34,36 @@ class Chart extends React.Component {
         }}
       />
     ) : null;
-    return <div className="chart">{lineChart}</div>;
+
+    const barChart = this.props.country ? (
+      <Bar
+        data={{
+          labels: ["Infected", "Recovered", "Deaths"],
+          datasets: [
+            {
+              label: "People",
+              backgroundColor: ["red", "green", "blue"],
+              data: [
+                this.props.data.confirmed.value,
+                this.props.data.recovered.value,
+                this.props.data.deaths.value,
+              ],
+            },
+          ],
+        }}
+        options={{
+          legend: { display: false },
+          title: {
+            display: true,
+            text: `Current state in ${this.props.country}`,
+          },
+        }}
+      ></Bar>
+    ) : null;
+
+    return (
+      <div className="chart">{this.props.country ? barChart : lineChart}</div>
+    );
   }
 }
 
